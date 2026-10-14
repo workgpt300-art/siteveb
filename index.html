@@ -1,183 +1,43 @@
-<!DOCTYPE html>
+<!doctype html>
 <html lang="uk">
-  <head>
-    <meta charset="UTF-8" />
-    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-    <title>ОСТАННІЙ ПАТРОН</title>
-    <link rel="stylesheet" href="styles.css" />
-  </head>
-  <body>
-    <div id="app">
-      <section id="menuScreen" class="screen active">
-        <div class="menu-shell">
-          <div class="title-block">
-            <p class="eyebrow">ІНДУСТРІАЛЬНИЙ ГОРОР</p>
-            <h1>ОСТАННІЙ ПАТРОН</h1>
-          </div>
-          <div class="menu-actions">
-            <button class="primary" data-action="quick-game">Швидка гра</button>
-            <button data-action="bot-game">Грати з ботами</button>
-            <button data-action="rules">Правила</button>
-            <button data-action="settings">Налаштування</button>
-            <button id="continueBtn" class="secondary" data-action="continue">Продовжити</button>
-          </div>
-        </div>
-      </section>
-
-      <section id="gameScreen" class="screen">
-        <header class="topbar">
-          <div>
-            <p class="eyebrow">Серія вбивств</p>
-            <h2 id="matchTitle">ОСТАННІЙ ПАТРОН</h2>
-          </div>
-          <div class="toolbar">
-            <button id="viewToggleBtn" class="ghost" type="button">Переключити вид</button>
-            <button id="rulesBtn" class="ghost" type="button">Правила</button>
-            <button id="settingsBtn" class="ghost" type="button">Налаштування</button>
-            <button id="menuBtn" class="ghost" type="button">Головне меню</button>
-          </div>
-        </header>
-
-        <main class="game-area">
-          <section id="firstPersonView" class="view-panel active">
-            <div class="scene-stage">
-              <div class="opponents-bank" id="opponentsBank"></div>
-              <div class="table-canvas">
-                <div class="table-glow"></div>
-                <div class="weapon-assembly">
-                  <div class="weapon-barrel"></div>
-                  <div class="weapon-body"></div>
-                  <div class="weapon-casing"></div>
-                  <div class="hands hands-left"></div>
-                  <div class="hands hands-right"></div>
-                </div>
-              </div>
-            </div>
-          </section>
-
-          <section id="tacticalView" class="view-panel hidden">
-            <div id="playersPanel" class="players-panel"></div>
-          </section>
-
-          <aside class="side-panel">
-            <div class="metabar">
-              <div class="stat-box">
-                <span class="label">Набої</span>
-                <strong id="ammoCount">0</strong>
-              </div>
-              <div class="stat-box">
-                <span class="label">Пострілів</span>
-                <strong id="liveCount">0</strong>
-              </div>
-              <div class="stat-box">
-                <span class="label">Холостих</span>
-                <strong id="blankCount">0</strong>
-              </div>
-            </div>
-
-            <div class="unit-panel">
-              <div class="panel-header">
-                <h3>Активний гравець</h3>
-              </div>
-              <div id="activePlayerCard" class="active-card"></div>
-            </div>
-
-            <div class="unit-panel">
-              <div class="panel-header">
-                <h3>Інвентар</h3>
-              </div>
-              <div id="inventoryPanel" class="inventory-list"></div>
-            </div>
-
-            <div class="unit-panel log-panel">
-              <div class="panel-header">
-                <h3>Журнал</h3>
-              </div>
-              <div id="eventLog" class="event-log"></div>
-            </div>
-          </aside>
-        </main>
-
-        <footer class="action-strip">
-          <div id="targetBar" class="target-bar"></div>
-          <div class="action-buttons">
-            <button id="reloadBtn" class="action" type="button">Перезарядити</button>
-            <button id="shootBtn" class="action primary" type="button">Постріл</button>
-            <button id="useItemBtn" class="action" type="button">Використати предмет</button>
-          </div>
-        </footer>
-      </section>
-    </div>
-
-    <div id="rulesModal" class="modal hidden" aria-hidden="true">
-      <div class="modal-card">
-        <div class="modal-head">
-          <h3>Правила гри</h3>
-          <button class="close-btn" data-close="rules" type="button">✕</button>
-        </div>
-        <div class="modal-body">
-          <h4>Як проходить хід</h4>
-          <p>Гра ведеться по колу: активний гравець робить хід, після чого черга переходить до наступного живого учасника. На початку кожного ходу перевіряються ефекти, що викликають пропуск ходу або посилення пострілу.</p>
-          <h4>Набої</h4>
-          <p>Після кожного пострілу витрачається один набій. Серія складається з бойових і холостих набоїв, які випадково перемішуються за допомогою Fisher–Yates. Сховану послідовність не показують до того, як її буде розкрито пострілом або використанням лупи.</p>
-          <h4>Предмети</h4>
-          <ul>
-            <li><strong>Лупа:</strong> показує наступний набій тільки тому, хто її застосував.</li>
-            <li><strong>Аптечка:</strong> відновлює 1 здоров'я.</li>
-            <li><strong>Наручники:</strong> вибраний суперник пропускає наступний хід.</li>
-            <li><strong>Ножівка:</strong> наступний бойовий постріл завдає +1 шкоди.</li>
-            <li><strong>Викидання набою:</strong> видаляє наступний набій без пострілу.</li>
-          </ul>
-          <h4>Боти</h4>
-          <p>Легка складність обирає випадкові дії, середня оцінює співвідношення пострілів і здоров'я, а важка використовується предмети, планує ризики та намагається забезпечити перевагу.</p>
-          <h4>Перемога</h4>
-          <p>Матч завершується, коли залишається лише один живий учасник. Після цього показується переможець і можна почати новий раунд без залишків старих ефектів.</p>
-        </div>
-      </div>
-    </div>
-
-    <div id="settingsModal" class="modal hidden" aria-hidden="true">
-      <div class="modal-card settings-card">
-        <div class="modal-head">
-          <h3>Налаштування</h3>
-          <button class="close-btn" data-close="settings" type="button">✕</button>
-        </div>
-        <div class="modal-body settings-body">
-          <label>
-            <span>Звук</span>
-            <input id="soundToggle" type="checkbox" checked />
-          </label>
-          <label>
-            <span>Складність</span>
-            <select id="difficultySelect">
-              <option value="easy">Легка</option>
-              <option value="medium">Середня</option>
-              <option value="hard">Важка</option>
-            </select>
-          </label>
-          <label>
-            <span>Кількість ботів</span>
-            <select id="botCountSelect">
-              <option value="1">1 бот</option>
-              <option value="2">2 боти</option>
-              <option value="3">3 боти</option>
-            </select>
-          </label>
-          <label>
-            <span>Вигляд</span>
-            <select id="viewModeSelect">
-              <option value="first">Від першої особи</option>
-              <option value="tactical">Тактичний вид</option>
-            </select>
-          </label>
-          <div class="settings-actions">
-            <button id="newGameBtn" class="primary" type="button">Нова гра</button>
-            <button id="rematchBtn" type="button">Повторний матч</button>
-          </div>
-        </div>
-      </div>
-    </div>
-
-    <script src="game.js"></script>
-  </body>
-</html>
+<head>
+<meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1">
+<meta name="theme-color" content="#090b0f">
+<title>ОСТАННІЙ ПАТРОН — FPS</title>
+<link rel="stylesheet" href="styles.css">
+</head>
+<body>
+<div id="boot" class="boot"><div class="boot-mark">OP<span>•</span></div><p>ЗАПУСК СИСТЕМИ</p><div class="boot-line"><i></i></div></div>
+<main id="app">
+<section id="menuScreen" class="screen menu-screen active">
+ <div class="menu-bg"><div class="moon"></div><div class="hangar hangar-a"></div><div class="hangar hangar-b"></div><div class="floor-grid"></div></div>
+ <header class="brand"><div class="brand-icon">ОП</div><div><b>ОСТАННІЙ ПАТРОН</b><small>INDUSTRIAL SURVIVAL PROTOCOL</small></div><span class="offline-pill"><i></i> ОДИНОЧНА ГРА</span></header>
+ <div class="menu-content"><div class="menu-copy"><p class="eyebrow"><span></span> ОБ'ЄКТ №07 · СЕКТОР C</p><h1>ОДИН<br><em>ОСТАННІЙ</em><br>ПАТРОН.</h1><p class="lead">Темрява. Сталь. Жодних гарантій.<br>Твій хід вирішує все.</p>
+ <div class="menu-buttons"><button id="startBtn" class="btn btn-primary"><span>▶</span><div><b>ПОЧАТИ ГРУ</b><small>Продовжити виживання</small></div><strong>↗</strong></button><button id="botsBtn" class="btn"><span>♟</span><div><b>НАЛАШТУВАТИ МАТЧ</b><small>Кількість ботів і складність</small></div><strong>＋</strong></button><button id="rulesBtn" class="btn"><span>≡</span><div><b>ЯК ГРАТИ</b><small>Керування та правила</small></div><strong>↗</strong></button></div>
+ <div class="menu-foot"><span>BUILD 0.2.0 · PROTOTYPE</span><span>ЗБЕРЕЖИ ХОЛОДНУ ГОЛОВУ</span></div></div>
+ <div class="menu-art"><div class="art-crosshair">＋</div><div class="art-ring ring-1"></div><div class="art-ring ring-2"></div><div class="art-pistol"><div class="p-slide"></div><div class="p-barrel"></div><div class="p-grip"></div><div class="p-trigger"></div></div><div class="art-caption"><b>DESERT EAGLE</b><span>.50 AE / SEMI-AUTO</span></div><div class="art-index">07<span>/</span>01</div></div></div>
+ <footer class="menu-bottom"><span>⚠ НЕБЕЗПЕЧНА ЗОНА</span><span>НАВЧАЛЬНИЙ СИМУЛЯТОР · ГРАЙ ВІДПОВІДАЛЬНО</span><span>UKR / UA</span></footer>
+</section>
+<section id="setupScreen" class="screen modal-screen">
+ <div class="setup-card"><button id="setupClose" class="x-btn">×</button><p class="eyebrow">ПІДГОТОВКА ДО МАТЧУ</p><h2>НАЛАШТУВАННЯ <em>БОЮ</em></h2>
+ <label class="field-label">КІЛЬКІСТЬ СУПЕРНИКІВ <span id="botValue">2 БОТИ</span></label><div class="choice-row" id="botChoices"><button data-bots="1">1</button><button data-bots="2" class="selected">2</button><button data-bots="3">3</button></div>
+ <label class="field-label">РІВЕНЬ СКЛАДНОСТІ</label><div class="choice-row difficulty"><button data-difficulty="easy">ЛЕГКА</button><button data-difficulty="medium" class="selected">НОРМАЛЬНА</button><button data-difficulty="hard">ВАЖКА</button></div>
+ <button id="launchBtn" class="btn btn-primary launch">ЗАПУСТИТИ МАТЧ <span>↗</span></button><p class="hint">У грі буде ти та обрана кількість ботів. Інтернет не потрібен, окрім завантаження 3D-бібліотеки.</p></div>
+</section>
+<section id="rulesScreen" class="screen modal-screen"><div class="setup-card rules-card"><button id="rulesClose" class="x-btn">×</button><p class="eyebrow">ПОЛЬОВИЙ ДОВІДНИК</p><h2>ПРАВИЛА <em>ВИЖИВАННЯ</em></h2><div class="rule-grid"><div><b>01 / РУХ</b><p>W A S D — рухатися. Миша — огляд. Клік у сцені — захопити курсор. Esc — відпустити.</p></div><div><b>02 / ТВОЯ ЧЕРГА</b><p>Після дії черга переходить далі. Обери суперника на панелі праворуч, потім натисни «Постріл».</p></div><div><b>03 / НАБОЇ</b><p>Серія містить бойові та холості набої. Лупа показує наступний набій. Холостий постріл у себе зберігає хід.</p></div><div><b>04 / ПРЕДМЕТИ</b><p>Аптечка лікує, наручники пропускають хід, ножівка посилює наступний бойовий постріл, викидання прибирає набій.</p></div></div><button id="rulesBack" class="btn btn-primary launch">ЗРОЗУМІЛО</button></div></section>
+<section id="gameScreen" class="screen game-screen">
+ <div id="world" class="world"><div class="world-vignette"></div><div class="world-top"><div class="location"><span class="live-dot"></span><div><b>СЕКТОР C / КАМЕРА 07</b><small>ПРОТОКОЛ ВИЖИВАННЯ</small></div></div><div class="round-chip">РАУНД <b id="roundNum">01</b></div><button id="exitBtn" class="icon-btn" title="Головне меню">✕</button></div><div class="center-reticle"><i></i><i></i><i></i><i></i><b>+</b></div><div id="hitFlash" class="hit-flash"></div><div id="toast" class="toast"></div><div class="weapon-view"><div class="weapon-shadow"></div><div class="weapon-model"><div class="weapon-slide"></div><div class="weapon-sight"></div><div class="weapon-barrel"></div><div class="weapon-muzzle"></div><div class="weapon-frame"></div><div class="weapon-trigger"></div><div class="weapon-grip"></div><div class="weapon-grip-lines"></div><div class="weapon-hand"></div></div></div><div class="world-bottom-left"><div class="health-icon">＋</div><div class="health-info"><small>ЖИТТЯ</small><b id="healthText">100</b></div><div class="health-track"><i id="healthBar"></i></div></div><div class="weapon-info"><span>ПІСТОЛЕТ / <b>DESERT EAGLE</b></span><strong><span id="ammoText">4</span><small> / <span id="ammoTotal">6</span></small></strong><div class="ammo-label">НАБОЇ В КАМОРІ</div></div><div class="movement-hint"><kbd>W</kbd><kbd>A</kbd><kbd>S</kbd><kbd>D</kbd><span>РУХ</span><kbd>М</kbd><span>ОГЛЯД</span></div><div id="turnBanner" class="turn-banner">ТВІЙ ХІД <span>ОБЕРИ ДІЮ</span></div></div>
+ <aside class="game-sidebar"><header class="sidebar-head"><div class="brand-icon small">ОП</div><div><b>ОСТАННІЙ ПАТРОН</b><small>TACTICAL INTERFACE</small></div><button id="pauseBtn" class="icon-btn" title="Пауза">Ⅱ</button></header>
+ <div class="side-section enemy-section"><div class="section-title">УЧАСНИКИ <span id="aliveCount">04 ЖИВИХ</span></div><div id="playersList" class="players-list"></div></div>
+ <div class="side-section turn-section"><div class="section-title">ПОТОЧНИЙ ХІД <span class="live-dot"></span></div><div id="turnCard" class="turn-card"><span class="turn-avatar">Я</span><div><b>Ти</b><small>Твоя черга діяти</small></div><span class="turn-tag">ТВІЙ</span></div><div class="shell-count"><div><span>БОЙОВІ</span><b id="liveCount">3</b></div><div><span>ХОЛОСТІ</span><b id="blankCount">3</b></div></div></div>
+ <div class="side-section action-section"><div class="section-title">ТАКТИЧНІ ДІЇ <span>01—04</span></div><button id="shootBtn" class="action-btn shoot"><span class="action-icon">⌁</span><span><b>ПОСТРІЛ</b><small>Обрана ціль</small></span><kbd>SPACE</kbd></button><button id="selfBtn" class="action-btn"><span class="action-icon">↻</span><span><b>ПОСТРІЛ У СЕБЕ</b><small>Холостий збереже хід</small></span><kbd>F</kbd></button><button id="reloadBtn" class="action-btn"><span class="action-icon">⇄</span><span><b>ПЕРЕЗАРЯДИТИ</b><small>Нова серія набоїв</small></span><kbd>R</kbd></button></div>
+ <div class="side-section inventory-section"><div class="section-title">ІНВЕНТАР <span id="itemCount">03 ПРЕДМЕТИ</span></div><div id="inventory" class="inventory"></div></div>
+ <div class="side-section log-section"><div class="section-title">ЖУРНАЛ ПОДІЙ <button id="clearLog" class="text-btn">ОЧИСТИТИ</button></div><div id="eventLog" class="event-log"></div></div>
+ <footer class="sidebar-footer"><span><i class="live-dot"></i> ЛОКАЛЬНИЙ МАТЧ</span><button id="gameRulesBtn" class="text-btn">ПРАВИЛА ↗</button></footer>
+ </aside>
+</section>
+<section id="pauseScreen" class="screen modal-screen"><div class="setup-card"><p class="eyebrow">МАТЧ ПРИЗУПИНЕНО</p><h2>ПЕРЕВЕДИ <em>ПОДИХ</em></h2><button id="resumeBtn" class="btn btn-primary launch">ПОВЕРНУТИСЯ ДО ГРИ</button><button id="pauseMenuBtn" class="btn launch">ГОЛОВНЕ МЕНЮ</button></div></section>
+<section id="resultScreen" class="screen modal-screen"><div class="setup-card result-card"><p class="eyebrow">МАТЧ ЗАВЕРШЕНО</p><h2 id="resultTitle">ТИ <em>ПЕРЕМІГ</em></h2><p id="resultText">Усі суперники вибули.</p><button id="againBtn" class="btn btn-primary launch">ЗІГРАТИ ЩЕ РАЗ ↗</button><button id="resultMenuBtn" class="btn launch">ГОЛОВНЕ МЕНЮ</button></div></section>
+</main>
+<script type="module" src="game.js"></script>
+</body></html>
